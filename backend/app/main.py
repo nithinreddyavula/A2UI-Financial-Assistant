@@ -4,10 +4,14 @@ from app.models.chat import ChatRequest
 from app.services.llm_service import LLMService
 from app.agents.intent_agent import IntentAgent
 from app.agents.research_agent import ResearchAgent
+from app.services.financial_assistant_service import FinancialAssistantService
 
 app = FastAPI()
-
 llm_service = LLMService()
+
+assistant_service = FinancialAssistantService(
+    llm_service
+)
 
 
 @app.get("/")
@@ -20,19 +24,8 @@ def root():
 @app.post("/chat")
 def chat(request: ChatRequest):
 
-    intent_agent = IntentAgent(llm_service)
-    research_agent = ResearchAgent(llm_service)
-
-    intent = intent_agent.detect_intent(
+    response = assistant_service.process(
         request.message
     )
 
-    research_plan = research_agent.plan_research(
-        request.message,
-        intent
-    )
-
-    return {
-        "intent": intent,
-        "research_plan": research_plan
-    }
+    return response
