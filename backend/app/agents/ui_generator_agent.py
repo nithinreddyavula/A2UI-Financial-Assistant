@@ -12,6 +12,7 @@ class UIGeneratorAgent:
 
     def generate_ui(
         self,
+        conversation_history: str,
         user_message: str,
         intent: IntentResponse,
         research_plan: str,
@@ -19,22 +20,25 @@ class UIGeneratorAgent:
     ) -> dict:
 
         user_prompt = f"""
-User Query:
-{user_message}
+        Conversation History:
+        {conversation_history}
 
-Intent:
-{intent.intent}
+        Current User Message:
+        {user_message}
 
-Research Plan:
-{research_plan}
+        Intent:
+        {intent.intent}
 
-Form Submitted:
-{"Yes" if form_submitted else "No"}
+        Research Plan:
+        {research_plan}
 
-Design the most appropriate interface.
+        Form Submitted:
+        {"Yes" if form_submitted else "No"}
 
-Return ONLY valid JSON.
-"""
+        Design the most appropriate interface.
+
+        Return ONLY valid JSON.
+        """
 
         response = self.llm_service.generate_response(
             SYSTEM_PROMPT,

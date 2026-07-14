@@ -1,9 +1,14 @@
 from app.agents.intent_agent import IntentAgent
 from app.agents.research_agent import ResearchAgent
 from app.agents.ui_generator_agent import UIGeneratorAgent
+from app.agents.validator_agent import ValidatorAgent
+
 from app.models.assistant import AssistantResponse
+
 from app.services.llm_service import LLMService
 from app.services.conversation_manager import ConversationManager
+
+from app.utils.fallback_ui import get_fallback_ui
 
 
 class FinancialAssistantService:
@@ -16,7 +21,54 @@ class FinancialAssistantService:
 
         self.ui_generator_agent = UIGeneratorAgent(llm_service)
 
+        self.validator_agent = ValidatorAgent()
+
         self.conversation_manager = ConversationManager()
+
+    def _generate_valid_ui(
+        self,
+        conversation_history: str,
+        user_message: str,
+        intent,
+        research_plan: str,
+        form_submitted: bool
+    ) -> dict:
+
+        ui = self.ui_generator_agent.generate_ui(
+            conversation_history,
+            user_message,
+            intent,
+            research_plan,
+            form_submitted
+        )
+
+        validation = self.validator_agent.validate(ui)
+
+        print("\nValidation Result")
+        print(validation)
+
+        if not validation.valid:
+
+            print("\nRetrying UI Generation...")
+
+            ui = self.ui_generator_agent.generate_ui(
+                conversation_history,
+                user_message,
+                intent,
+                research_plan,
+                form_submitted
+            )
+
+            validation = self.validator_agent.validate(ui)
+
+        if not validation.valid:
+
+            print("\nRetry Failed")
+            print(validation.reason)
+
+            ui = get_fallback_ui()
+
+        return ui
 
     def process(
         self,
@@ -30,36 +82,38 @@ class FinancialAssistantService:
 
         conversation_history = (
             self.conversation_manager
-                .get_history_as_text()
+            .get_history_as_text()
         )
 
         intent = self.intent_agent.detect_intent(
             conversation_history,
             user_message
         )
+
         if form_data:
 
             research_plan = f"""
-        User Preferences
+User Preferences
 
-        Amount: {form_data.get("amount")}
+Amount: {form_data.get("amount")}
 
-        Risk: {form_data.get("risk")}
+Risk: {form_data.get("risk")}
 
-        Investment Horizon: {form_data.get("horizon")}
+Investment Horizon: {form_data.get("horizon")}
 
-        Generate a recommendation.
-        """
+Generate a recommendation.
+"""
 
             ui = self.ui_generator_agent.generate_ui(
-                "Generate investment recommendation",
+                conversation_history,
+                user_message,
                 intent,
                 research_plan,
                 True
             )
 
             self.conversation_manager.add_assistant_message(
-                "Generated comparison interface."
+                "Generated investment recommendation."
             )
 
             return AssistantResponse(
@@ -69,11 +123,13 @@ class FinancialAssistantService:
             )
 
         research_plan = self.research_agent.plan_research(
+            conversation_history,
             user_message,
             intent
         )
 
         ui = self.ui_generator_agent.generate_ui(
+            conversation_history,
             user_message,
             intent,
             research_plan,
@@ -81,7 +137,7 @@ class FinancialAssistantService:
         )
 
         self.conversation_manager.add_assistant_message(
-            "Generated recommendation interface."
+            "Generated interface."
         )
 
         return AssistantResponse(

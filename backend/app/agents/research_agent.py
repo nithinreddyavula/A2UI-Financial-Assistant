@@ -9,17 +9,25 @@ class ResearchAgent:
 
     def plan_research(
         self,
+        conversation_history: str,
         user_message: str,
         intent: IntentResponse
     ) -> str:
 
         user_prompt = f"""
-Intent:
-{intent.intent}
+        Conversation History:
+        {conversation_history}
 
-User Query:
-{user_message}
-"""
+        Current User Message:
+        {user_message}
+
+        Intent:
+        {intent.intent}
+
+        Create the research plan.
+
+        Return only plain text.
+        """
 
         research_plan = self.llm_service.generate_response(
             SYSTEM_PROMPT,
