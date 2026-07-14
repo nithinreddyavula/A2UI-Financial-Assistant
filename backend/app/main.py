@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 
 from app.models.chat import ChatRequest
+from app.services.llm_service import LLMService
 
 app = FastAPI()
+
+llm_service = LLMService()
 
 
 @app.get("/")
@@ -15,6 +18,10 @@ def root():
 @app.post("/chat")
 def chat(request: ChatRequest):
 
+    response = llm_service.generate_response(
+        request.message
+    )
+
     return {
-        "response": f"Received your message: {request.message}"
+        "response": response
     }
