@@ -14,7 +14,8 @@ class UIGeneratorAgent:
         self,
         user_message: str,
         intent: IntentResponse,
-        research_plan: str
+        research_plan: str,
+        form_submitted: bool = False
     ) -> dict:
 
         user_prompt = f"""
@@ -27,7 +28,12 @@ Intent:
 Research Plan:
 {research_plan}
 
-Generate the appropriate A2UI JSON.
+Form Submitted:
+{"Yes" if form_submitted else "No"}
+
+Design the most appropriate interface.
+
+Return ONLY valid JSON.
 """
 
         response = self.llm_service.generate_response(

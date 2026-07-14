@@ -32,7 +32,8 @@ def root():
 def chat(request: ChatRequest):
 
     response = assistant_service.process(
-        request.message
+        request.message,
+        request.formData
     )
 
     return response

@@ -17,12 +17,39 @@ class FinancialAssistantService:
 
     def process(
         self,
-        user_message: str
+        user_message: str,
+        form_data: dict | None = None
     ) -> AssistantResponse:
 
         intent = self.intent_agent.detect_intent(
             user_message
         )
+        if form_data:
+
+            research_plan = f"""
+        User Preferences
+
+        Amount: {form_data.get("amount")}
+
+        Risk: {form_data.get("risk")}
+
+        Investment Horizon: {form_data.get("horizon")}
+
+        Generate a recommendation.
+        """
+
+            ui = self.ui_generator_agent.generate_ui(
+                "Generate investment recommendation",
+                intent,
+                research_plan,
+                True
+            )
+
+            return AssistantResponse(
+                intent=intent,
+                research_plan=research_plan,
+                ui=ui
+            )
 
         research_plan = self.research_agent.plan_research(
             user_message,
@@ -32,7 +59,8 @@ class FinancialAssistantService:
         ui = self.ui_generator_agent.generate_ui(
             user_message,
             intent,
-            research_plan
+            research_plan,
+            False
         )
 
         return AssistantResponse(

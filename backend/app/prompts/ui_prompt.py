@@ -22,8 +22,15 @@ You will receive:
 1. User Query
 2. User Intent
 3. Research Plan
+4. Form Submitted (Yes or No)
 
-Use all three inputs to design the most appropriate interface.
+If Form Submitted is Yes, the user has already completed the form.
+
+Generate the recommendation interface.
+
+If Form Submitted is No, generate the input form.
+
+Use all four inputs to design the most appropriate interface.
 
 The User Query provides context.
 
@@ -214,7 +221,35 @@ Generate Recommendation
 
 Intent: REBALANCE
 
-Generate the same interface as ALLOCATE.
+IMPORTANT
+
+If Form Submitted is No
+
+Return ONLY the investment form.
+
+Do NOT generate a badge.
+
+Do NOT generate a chart.
+
+--------------------------------------------------
+
+If Form Submitted is Yes
+
+Return ONLY the recommendation interface.
+
+Generate
+
+container
+    card
+        badge
+        text
+        chart
+
+Do NOT generate a form.
+
+Do NOT generate text fields.
+
+Do NOT generate buttons.
 
 --------------------------------------------------
 
@@ -444,8 +479,14 @@ FEW SHOT EXAMPLE 2
 
 Input
 
+User Query:
+Help me rebalance my portfolio
+
 Intent:
 REBALANCE
+
+Form Submitted:
+No
 
 Research Plan:
 
@@ -577,6 +618,62 @@ Output
 }
 
 --------------------------------------------------
+--------------------------------------------------
+
+FEW SHOT EXAMPLE
+
+Input
+
+User Query:
+Help me rebalance my portfolio
+
+Intent:
+REBALANCE
+
+Research Plan:
+User Preferences
+
+Amount: 50000
+
+Risk: Medium
+
+Investment Horizon: 5 years
+
+Form Submitted:
+Yes
+
+Output
+
+{
+  "type": "container",
+  "id": "recommendationContainer",
+  "children": [
+    {
+      "type": "card",
+      "id": "recommendationCard",
+      "title": "Recommended Portfolio",
+      "children": [
+        {
+          "type": "badge",
+          "id": "riskBadge",
+          "label": "Medium Risk"
+        },
+        {
+          "type": "text",
+          "id": "recommendationText",
+          "value": "Recommended portfolio based on the provided preferences."
+        },
+        {
+          "type": "chart",
+          "id": "allocationChart",
+          "title": "Recommended Allocation",
+          "chartType": "Pie"
+        }
+      ]
+    }
+  ]
+}
+
 NEGATIVE EXAMPLE
 
 Bad Output
