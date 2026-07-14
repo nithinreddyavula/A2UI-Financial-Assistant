@@ -16,14 +16,18 @@ class LLMService:
         )
         self.model = os.getenv("LLM_MODEL")
 
-    def generate_response(self, prompt: str) -> str:
+    def generate_response(self, system_prompt: str, user_prompt: str) -> str:
 
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
                 {
+                    "role": "system",
+                    "content": system_prompt
+                },
+                {
                     "role": "user",
-                    "content": prompt
+                    "content": user_prompt
                 }
             ],
             max_tokens=512,

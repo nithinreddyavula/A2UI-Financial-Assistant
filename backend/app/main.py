@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.models.chat import ChatRequest
 from app.services.llm_service import LLMService
+from app.agents.intent_agent import IntentAgent
 
 app = FastAPI()
 
@@ -18,7 +19,11 @@ def root():
 @app.post("/chat")
 def chat(request: ChatRequest):
 
-    response = llm_service.generate_response(
+
+
+    intent_agent = IntentAgent(llm_service)
+
+    response = intent_agent.detect_intent(
         request.message
     )
 
