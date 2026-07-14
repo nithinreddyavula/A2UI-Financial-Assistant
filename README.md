@@ -495,9 +495,32 @@ Built a recursive React renderer capable of rendering nested A2UI components.
 
 # Screenshots
 
-Add screenshots demonstrating:
+## Company Comparison
 
-- Company Comparison
-- Portfolio Form
-- Recommendation Card
-- Streaming Progress
+The assistant compares two companies using an AI-generated comparison card.
+
+![Company Comparison](screenshots/compare.png)
+
+---
+
+## Portfolio Preference Form
+
+The assistant dynamically generates an investment preference form.
+
+![Portfolio Form](screenshots/portfolio-form.png)
+
+---
+
+## Investment Recommendation
+
+The assistant generates a personalized recommendation after form submission.
+
+![Recommendation](screenshots/recommendation.png)
+
+---
+
+## Streaming Progress
+
+The frontend displays live agent progress while processing the request.
+
+![Streaming](screenshots/streaming.png)
