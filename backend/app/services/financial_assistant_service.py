@@ -44,12 +44,7 @@ class FinancialAssistantService:
 
         validation = self.validator_agent.validate(ui)
 
-        print("\nValidation Result")
-        print(validation)
-
         if not validation.valid:
-
-            print("\nRetrying UI Generation...")
 
             ui = self.ui_generator_agent.generate_ui(
                 conversation_history,
@@ -62,9 +57,6 @@ class FinancialAssistantService:
             validation = self.validator_agent.validate(ui)
 
         if not validation.valid:
-
-            print("\nRetry Failed")
-            print(validation.reason)
 
             ui = get_fallback_ui()
 
@@ -104,7 +96,7 @@ Investment Horizon: {form_data.get("horizon")}
 Generate a recommendation.
 """
 
-            ui = self.ui_generator_agent.generate_ui(
+            ui = self._generate_valid_ui(
                 conversation_history,
                 user_message,
                 intent,
@@ -128,7 +120,7 @@ Generate a recommendation.
             intent
         )
 
-        ui = self.ui_generator_agent.generate_ui(
+        ui = self._generate_valid_ui(
             conversation_history,
             user_message,
             intent,

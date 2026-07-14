@@ -55,7 +55,7 @@ export async function streamMessage(
             }
 
             catch {
-                console.log("STATUS:", data);
+
                 callbacks.onStatus(data);
 
             }
