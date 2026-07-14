@@ -37,3 +37,11 @@ def chat(request: ChatRequest):
     )
 
     return response
+@app.post("/conversation/clear")
+def clear_conversation():
+
+    assistant_service.conversation_manager.clear()
+
+    return {
+        "message": "Conversation cleared."
+    }
