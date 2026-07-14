@@ -1,4 +1,5 @@
 import type { TextComponent } from "../types/ui";
+import "../styles/Text.css";
 
 type TextProps = {
     component: TextComponent;

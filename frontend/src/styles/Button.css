@@ -1,0 +1,25 @@
+.primary-button{
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    font-weight:600;
+
+}
+
+.primary-button:hover{
+
+    background:#1d4ed8;
+
+}

@@ -1,5 +1,5 @@
 import Renderer from "./Renderer";
-
+import "../styles/Container.css";
 import type { ContainerComponent } from "../types/ui";
 
 type ContainerProps = {
@@ -19,7 +19,7 @@ export default function Container({
 
     return (
 
-        <div>
+        <div className="container">
 
             {
 

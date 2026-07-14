@@ -1,0 +1,35 @@
+.text-field{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.text-field label{
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+}
+
+.text-input{
+
+    padding:12px;
+
+    border-radius:8px;
+
+    border:1px solid #d1d5db;
+
+    font-size:15px;
+
+}
+
+.text-input:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+}

@@ -1,20 +1,22 @@
+import "../styles/Chart.css";
+
 import type { ChartComponent } from "../types/ui";
 
-type ChartProps = {
+type Props = {
     component: ChartComponent;
 };
 
-export default function Chart({ component }: ChartProps) {
+export default function Chart({ component }: Props){
 
-    return (
+    return(
 
-        <div>
+        <div className="chart">
 
-            <h3>{component.title}</h3>
+            📊 {component.title}
 
             <p>
 
-                {component.chartType} Chart
+                ({component.chartType} Chart)
 
             </p>
 

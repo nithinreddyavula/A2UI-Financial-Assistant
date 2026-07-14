@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./App.css";
 
 import Renderer from "./components/Renderer";
 import { sendMessage } from "./api/assistant";
@@ -14,48 +15,53 @@ function App() {
 
     const [ui, setUi] = useState<UIComponent | null>(null);
 
-    const [statuses, setStatuses] = useState<string[]>([]);
+    const [status, setStatus] = useState("");
+
+    const [loading, setLoading] = useState(false);
 
     async function handleSend() {
 
-        if (!message.trim()) return;
+        if (!message.trim() || loading) return;
+
+        setLoading(true);
 
         setCurrentMessage(message);
 
         setUi(null);
 
-        setStatuses([]);
+        setStatus("");
+
+        const userMessage = message;
+
+        setMessage("");
 
         await streamMessage(
-            message,
+            userMessage,
             {
                 onStatus: (status) => {
-                    setStatuses((prev) => [...prev, status]);
+                    setStatus(status);
                 },
 
                 onResult: (ui) => {
                     setUi(ui);
+                    setStatus("");
+                    setLoading(false);
                 }
             }
         );
 
-        setMessage("");
-
     }
+
     async function handleFormSubmit(formData: {
         amount: string;
         risk: string;
         horizon: string;
     }) {
 
-        console.log("App received:", formData);
-
         const response = await sendMessage(
             currentMessage,
             formData
         );
-        console.log("Backend Response:", response);
-        console.log("UI:", response.ui);
 
         setUi(response.ui);
 
@@ -63,41 +69,77 @@ function App() {
 
     return (
 
-        <div>
+        <div className="app">
 
-            <h1>A2UI Financial Assistant</h1>
+            <div className="header">
 
-            <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Ask anything..."
-            />
+                <h1>
+                    A2UI Financial Assistant
+                </h1>
 
-            <button onClick={handleSend}>
-                Send
-            </button>
-
-            <hr />
-
-            {statuses.map((status, index) => (
-
-                <p key={index}>
-
-                    ✓ {status}
-
+                <p>
+                    AI Powered Financial Advisory Assistant
                 </p>
 
-            ))}
+            </div>
 
-            {ui && (
+            <div className="input-section">
 
-                <Renderer
-                    component={ui}
-                    onFormSubmit={handleFormSubmit}
+                <input
+                    type="text"
+                    value={message}
+                    placeholder="Ask anything..."
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            handleSend();
+                        }
+                    }}
                 />
 
+                <button
+                    onClick={handleSend}
+                    disabled={loading}
+                >
+
+                    {loading ? "Thinking..." : "Send"}
+
+                </button>
+
+            </div>
+
+            {status && (
+
+                <div className="progress-card">
+
+                    <div className="thinking">
+
+                        <span className="dot"></span>
+
+                        <span>{status}</span>
+
+                    </div>
+
+                </div>
+
             )}
+
+            <div className="response-section">
+
+                {
+
+                    ui && (
+
+                        <Renderer
+                            component={ui}
+                            onFormSubmit={handleFormSubmit}
+                        />
+
+                    )
+
+                }
+
+            </div>
 
         </div>
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Renderer from "./Renderer";
 import TextField from "./TextField";
 import Button from "./Button";
-
+import "../styles/Form.css";
 import type { FormComponent } from "../types/ui";
 
 type FormProps = {
@@ -41,7 +41,7 @@ export default function Form({
 
     return (
 
-        <form onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
 
             <h3>{component.title}</h3>
 

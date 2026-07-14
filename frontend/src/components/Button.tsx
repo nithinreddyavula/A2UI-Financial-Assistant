@@ -1,3 +1,5 @@
+import "../styles/Button.css";
+
 import type { ButtonComponent } from "../types/ui";
 
 type ButtonProps = {
@@ -8,7 +10,10 @@ export default function Button({ component }: ButtonProps) {
 
     return (
 
-        <button type="submit">
+        <button
+            className="primary-button"
+            type="submit"
+        >
 
             {component.label}
 

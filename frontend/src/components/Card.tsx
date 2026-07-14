@@ -1,4 +1,5 @@
 import Renderer from "./Renderer";
+import "../styles/Card.css";
 
 import type { CardComponent } from "../types/ui";
 
@@ -19,7 +20,7 @@ export default function Card({
 
     return (
 
-        <div>
+        <div className="card">
 
             <h2>{component.title}</h2>
 

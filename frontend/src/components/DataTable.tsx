@@ -1,5 +1,5 @@
 import type { DataTableComponent } from "../types/ui";
-
+import "../styles/DataTable.css";
 type DataTableProps = {
     component: DataTableComponent;
 };
@@ -7,6 +7,8 @@ type DataTableProps = {
 export default function DataTable({ component }: DataTableProps) {
 
     return (
+
+        <div className="table-container">
 
         <table border={1} cellPadding={8}>
 
@@ -45,6 +47,8 @@ export default function DataTable({ component }: DataTableProps) {
             </tbody>
 
         </table>
+
+       </div>
 
     );
 
