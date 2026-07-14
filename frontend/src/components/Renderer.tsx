@@ -13,17 +13,36 @@ import Chart from "./Chart";
 
 type RendererProps = {
     component: UIComponent;
+
+    onFormSubmit?: (formData: {
+        amount: string;
+        risk: string;
+        horizon: string;
+    }) => void;
 };
 
-export default function Renderer({ component }: RendererProps) {
+export default function Renderer({
+    component,
+    onFormSubmit
+}: RendererProps) {
 
     switch (component.type) {
 
         case "container":
-            return <Container component={component} />;
+            return (
+                <Container
+                    component={component}
+                    onFormSubmit={onFormSubmit}
+                />
+            );
 
         case "card":
-            return <Card component={component} />;
+            return (
+                <Card
+                    component={component}
+                    onFormSubmit={onFormSubmit}
+                />
+            );
 
         case "text":
             return <Text component={component} />;
@@ -32,7 +51,13 @@ export default function Renderer({ component }: RendererProps) {
             return <DataTable component={component} />;
 
         case "form":
-            return <Form component={component} />;
+
+            return (
+                <Form
+                    component={component}
+                    onSubmit={onFormSubmit}
+                />
+            );
 
         case "textField":
             return <TextField component={component} />;

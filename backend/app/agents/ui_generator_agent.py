@@ -41,6 +41,16 @@ Return ONLY valid JSON.
             user_prompt
         )
 
+        response = response.strip()
+
+        if response.startswith("```json"):
+            response = response.replace("```json", "", 1)
+
+        if response.endswith("```"):
+            response = response[:-3]
+
+        response = response.strip()
+
         ui_json = json.loads(response)
 
         return ui_json

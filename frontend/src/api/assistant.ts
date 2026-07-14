@@ -1,6 +1,15 @@
 const API_URL = "http://localhost:8000/chat";
 
-export async function sendMessage(message: string) {
+type FormData = {
+    amount: string;
+    risk: string;
+    horizon: string;
+};
+
+export async function sendMessage(
+    message: string,
+    formData?: FormData
+) {
 
     const response = await fetch(API_URL, {
 
@@ -12,6 +21,7 @@ export async function sendMessage(message: string) {
 
         body: JSON.stringify({
             message,
+            formData,
         }),
 
     });
@@ -21,5 +31,4 @@ export async function sendMessage(message: string) {
     }
 
     return response.json();
-
 }

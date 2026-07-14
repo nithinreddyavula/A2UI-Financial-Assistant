@@ -4,9 +4,18 @@ import type { ContainerComponent } from "../types/ui";
 
 type ContainerProps = {
     component: ContainerComponent;
+
+    onFormSubmit?: (formData: {
+        amount: string;
+        risk: string;
+        horizon: string;
+    }) => void;
 };
 
-export default function Container({ component }: ContainerProps) {
+export default function Container({
+    component,
+    onFormSubmit
+}: ContainerProps) {
 
     return (
 
@@ -19,6 +28,7 @@ export default function Container({ component }: ContainerProps) {
                     <Renderer
                         key={child.id}
                         component={child}
+                        onFormSubmit={onFormSubmit}
                     />
 
                 ))

@@ -4,9 +4,18 @@ import type { CardComponent } from "../types/ui";
 
 type CardProps = {
     component: CardComponent;
+
+    onFormSubmit?: (formData: {
+        amount: string;
+        risk: string;
+        horizon: string;
+    }) => void;
 };
 
-export default function Card({ component }: CardProps) {
+export default function Card({
+    component,
+    onFormSubmit
+}: CardProps) {
 
     return (
 
@@ -21,6 +30,7 @@ export default function Card({ component }: CardProps) {
                     <Renderer
                         key={child.id}
                         component={child}
+                        onFormSubmit={onFormSubmit}
                     />
 
                 ))

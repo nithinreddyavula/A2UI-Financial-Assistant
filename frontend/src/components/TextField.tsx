@@ -2,9 +2,15 @@ import type { TextFieldComponent } from "../types/ui";
 
 type TextFieldProps = {
     component: TextFieldComponent;
+    value: string;
+    onChange: (value: string) => void;
 };
 
-export default function TextField({ component }: TextFieldProps) {
+export default function TextField({
+    component,
+    value,
+    onChange
+}: TextFieldProps) {
 
     return (
 
@@ -22,6 +28,8 @@ export default function TextField({ component }: TextFieldProps) {
                 type="text"
                 name={component.name}
                 placeholder={component.placeholder}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
             />
 
         </div>
