@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import Renderer from "./components/Renderer";
 import { sendMessage } from "./api/assistant";
+import { streamMessage } from "./api/streamAssistant";
 
 import type { UIComponent } from "./types/ui";
 
@@ -13,15 +14,30 @@ function App() {
 
     const [ui, setUi] = useState<UIComponent | null>(null);
 
+    const [statuses, setStatuses] = useState<string[]>([]);
+
     async function handleSend() {
 
         if (!message.trim()) return;
 
         setCurrentMessage(message);
 
-        const response = await sendMessage(message);
+        setUi(null);
 
-        setUi(response.ui);
+        setStatuses([]);
+
+        await streamMessage(
+            message,
+            {
+                onStatus: (status) => {
+                    setStatuses((prev) => [...prev, status]);
+                },
+
+                onResult: (ui) => {
+                    setUi(ui);
+                }
+            }
+        );
 
         setMessage("");
 
@@ -63,6 +79,16 @@ function App() {
             </button>
 
             <hr />
+
+            {statuses.map((status, index) => (
+
+                <p key={index}>
+
+                    ✓ {status}
+
+                </p>
+
+            ))}
 
             {ui && (
 
