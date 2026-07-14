@@ -65,6 +65,7 @@ Response:
         )
 
 
+
         intent_json = json.loads(response)
 
         return IntentResponse(**intent_json)

@@ -1,125 +1,243 @@
 # A2UI Financial Assistant
 
-An AI-powered financial assistant that uses multiple AI agents to understand user requests and dynamically generate user interfaces using the A2UI specification.
+An AI-powered financial advisory assistant that uses a multi-agent architecture to generate dynamic A2UI JSON, which is rendered as interactive React components.
+
+The project demonstrates how LLMs can decide the appropriate user interface based on user intent instead of returning plain text responses.
 
 ---
 
-## 🚀 Tech Stack
+# 🚀 Tech Stack
 
-### Backend
-- Python 3.14
+## Backend
+
+- Python
 - FastAPI
 - OpenRouter
-- Google Gemini
+- OpenAI Python SDK
 - Pydantic
 
-### Frontend *(Upcoming)*
+## Frontend
+
 - React
 - TypeScript
 - Tailwind CSS
 
 ---
 
-## 🏗️ Architecture
+# 🏗️ Architecture
 
 ```
 User
    │
    ▼
-FastAPI
-   │
-   ▼
 Intent Agent
    │
    ▼
-LLM Service
+Research Agent
    │
    ▼
-OpenRouter
+UI Generator Agent
    │
    ▼
-Gemini
+A2UI JSON
+   │
+   ▼
+React Renderer
 ```
 
 ---
 
-## ✨ Features
+# 🤖 Multi-Agent Pipeline
 
-### ✅ Completed
+### Intent Agent
 
-- FastAPI backend
-- REST API endpoints
-- OpenRouter LLM integration
-- Gemini model support
-- Prompt-based AI architecture
-- Intent Classification Agent
-- Pydantic response validation
-- Modular LLM Service
+Responsible for understanding the user's request.
 
-### 🚧 In Progress
+Example:
 
-- Research Agent
-- Conversation Memory
-- A2UI JSON Generator
-- React Renderer
-- Streaming Responses
+```
+Compare Apple and Microsoft
+```
 
-### 📅 Planned
+↓
 
-- Financial Research Agent
-- Dynamic UI Generation
-- Conversation Persistence
-- Token Usage Monitoring
-- Investment Assistant Workflows
+```
+COMPARE
+```
 
 ---
 
-## 📂 Project Structure
+### Research Agent
+
+Determines what information is required to answer the request.
+
+Example:
+
+```
+Collect
+
+- Company Overview
+- Revenue
+- Market Capitalization
+- Net Profit
+- P/E Ratio
+- Earnings Growth
+```
+
+---
+
+### UI Generator Agent
+
+Uses the user query, detected intent, and research plan to generate structured A2UI JSON.
+
+Example Output:
+
+- Comparison Cards
+- Forms
+- Data Tables
+- Recommendation Cards
+
+---
+
+# 🎨 Supported A2UI Components
+
+- Container
+- Card
+- Text
+- Form
+- TextField
+- Button
+- DataTable
+- Badge
+- Chart
+
+---
+
+# ✨ Features
+
+- Multi-Agent AI Pipeline
+- Real OpenRouter LLM Integration
+- Dynamic Intent Classification
+- Dynamic Research Planning
+- AI Generated A2UI JSON
+- Structured JSON Validation
+- Modular Agent Architecture
+- Clean Prompt Engineering
+
+---
+
+# 🚧 Current Status
+
+## ✅ Completed
+
+- FastAPI Backend
+- OpenRouter Integration
+- Intent Agent
+- Research Agent
+- UI Generator Agent
+- Financial Assistant Service
+- Structured A2UI JSON Generation
+
+## 🚀 In Progress
+
+- React A2UI Renderer
+- Recursive Component Rendering
+- Conversation Memory
+- Streaming Responses
+
+## 📅 Planned
+
+- Validator + Retry Agent
+- Redis Conversation Memory
+- Tool Calling
+- Portfolio Recommendation Engine
+- Stock Data Integration
+
+---
+
+# 📂 Project Structure
 
 ```
 backend/
 │
 ├── app/
 │   ├── agents/
+│   │   ├── intent_agent.py
+│   │   ├── research_agent.py
+│   │   └── ui_generator_agent.py
+│   │
 │   ├── models/
 │   ├── services/
-│   └── main.py
+│   ├── main.py
+│   └── ...
 │
-├── requirements.txt
-└── .env.example
+└── requirements.txt
 ```
 
 ---
 
-## 📈 Development Progress
+# 📌 Example Flow
 
-- ✅ Project Setup
-- ✅ FastAPI Configuration
-- ✅ Chat API
-- ✅ OpenRouter Integration
-- ✅ Intent Agent
-- ⏳ Research Agent
-- ⏳ Conversation Manager
-- ⏳ A2UI Generator
-- ⏳ React Frontend
+User:
+
+```
+Compare Apple and Microsoft
+```
+
+↓
+
+Intent Agent
+
+```
+COMPARE
+```
+
+↓
+
+Research Agent
+
+```
+Company Overview
+Revenue
+Market Capitalization
+PE Ratio
+...
+```
+
+↓
+
+UI Generator
+
+```json
+{
+  "type": "container",
+  "children": [
+    {
+      "type": "card",
+      "title": "Apple vs Microsoft"
+    }
+  ]
+}
+```
+
+↓
+
+React renders the UI dynamically.
 
 ---
 
-## 🎯 Goal
+# 🎯 Project Goal
 
-Build an AI-powered financial assistant that understands user intent, performs financial reasoning using specialized AI agents, and dynamically renders user interfaces using the A2UI specification.
+Instead of returning plain text, the AI generates structured A2UI JSON describing the interface. The frontend interprets this JSON and renders a fully interactive user experience.
 
 ---
 
-## 👨‍💻 Current Status
+# 📝 Future Improvements
 
-**Milestone 5 Completed ✅**
-
-The project can now:
-
-- Accept user requests
-- Classify user intent using an AI Agent
-- Validate responses with Pydantic
-- Use a shared LLM Service for AI communication
-
-The next milestone is implementing the **Research Agent**, which will analyze the user's request and gather the required financial context before generating the UI.
+- Conversation Memory
+- Streaming Responses
+- Validator + Retry Loop
+- Tool Calling
+- Live Financial Data Integration
+- Model Fallback
+- Token Usage Tracking

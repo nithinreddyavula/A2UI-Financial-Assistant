@@ -1,5 +1,6 @@
 from app.agents.intent_agent import IntentAgent
 from app.agents.research_agent import ResearchAgent
+from app.agents.ui_generator_agent import UIGeneratorAgent
 from app.models.assistant import AssistantResponse
 from app.services.llm_service import LLMService
 
@@ -11,6 +12,8 @@ class FinancialAssistantService:
         self.intent_agent = IntentAgent(llm_service)
 
         self.research_agent = ResearchAgent(llm_service)
+
+        self.ui_generator_agent = UIGeneratorAgent(llm_service)
 
     def process(
         self,
@@ -26,7 +29,14 @@ class FinancialAssistantService:
             intent
         )
 
+        ui = self.ui_generator_agent.generate_ui(
+            user_message,
+            intent,
+            research_plan
+        )
+
         return AssistantResponse(
             intent=intent,
-            research_plan=research_plan
+            research_plan=research_plan,
+            ui=ui
         )
