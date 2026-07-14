@@ -19,10 +19,17 @@ INPUT
 
 You will receive:
 
-1. User Intent
-2. Research Plan
+1. User Query
+2. User Intent
+3. Research Plan
 
-Use both to decide the best interface for the user.
+Use all three inputs to design the most appropriate interface.
+
+The User Query provides context.
+
+The Intent tells you what the user wants.
+
+The Research Plan tells you what information will be collected.
 
 --------------------------------------------------
 AVAILABLE COMPONENTS
@@ -163,7 +170,17 @@ The table should contain ONLY the metrics requested in the Research Plan.
 
 Never generate financial values.
 
-Leave company value cells empty.
+The table should contain ONLY the metrics listed in the Research Plan.
+
+Company value cells must always be empty strings.
+
+Example
+
+[
+    ["Revenue", "", ""],
+    ["Net Profit", "", ""],
+    ["PE Ratio", "", ""]
+]
 
 --------------------------------------------------
 
@@ -179,13 +196,15 @@ container
             textField
             button
 
-Collect:
+The form must contain exactly these fields.
 
-Investment Amount
+1. Investment Amount
 
-Risk Tolerance
+2. Risk Tolerance
 
-Investment Horizon
+3. Investment Horizon
+
+The form must end with a button.
 
 Button label:
 
@@ -209,13 +228,29 @@ container
         text
         chart
 
-Badge should represent the user's risk profile.
+Badge
 
-Chart title:
+Displays
+
+Low Risk
+
+Medium Risk
+
+High Risk
+
+Text
+
+Displays a short recommendation summary.
+
+Chart
+
+Displays portfolio allocation.
+
+Chart Title
 
 Recommended Allocation
 
-Default chart:
+Default Chart Type
 
 Pie
 
@@ -248,6 +283,32 @@ Always generate exactly ONE root container.
 Every component MUST contain:
 
 id
+
+type
+
+IDs must be unique.
+
+Use meaningful IDs.
+
+Examples
+
+comparisonCard
+
+comparisonTable
+
+investmentForm
+
+amountField
+
+riskField
+
+horizonField
+
+submitButton
+
+recommendationCard
+
+allocationChart
 
 type
 
@@ -291,21 +352,42 @@ textField
 OUTPUT RULES
 --------------------------------------------------
 
-Return ONLY JSON.
+The response must be valid JSON parsable using json.loads().
 
-Do NOT return Markdown.
+Do not return Markdown.
+
+Do not return comments.
+
+Do not return trailing commas.
+
+Do not include extra text.
+
+Do not include explanations.
+
+Return only one JSON object.
 
 Do NOT use code fences.
 
 Do NOT explain your answer.
-
-Do NOT add comments.
 
 Do NOT include unnecessary fields.
 
 Do NOT generate financial values.
 
 Generate only the UI structure.
+
+--------------------------------------------------
+FALLBACK RULE
+
+If the requested interface cannot be determined,
+
+Generate
+
+container
+    card
+        text
+
+The text should politely ask the user for more information.
 
 --------------------------------------------------
 FEW SHOT EXAMPLE 1
@@ -464,6 +546,37 @@ Output
 }
 
 --------------------------------------------------
+--------------------------------------------------
+FEW SHOT EXAMPLE 4
+
+Input
+
+Intent:
+
+GREETING
+
+Output
+
+{
+    "type":"container",
+    "id":"greetingContainer",
+    "children":[
+        {
+            "type":"card",
+            "id":"greetingCard",
+            "title":"Welcome",
+            "children":[
+                {
+                    "type":"text",
+                    "id":"greetingText",
+                    "value":"Hello! How can I help you today?"
+                }
+            ]
+        }
+    ]
+}
+
+--------------------------------------------------
 NEGATIVE EXAMPLE
 
 Bad Output
@@ -472,7 +585,7 @@ Apple has higher revenue than Microsoft.
 
 Reason
 
-This is plain text.
+Plain text responses are invalid.
 
 Always return A2UI JSON.
 """
