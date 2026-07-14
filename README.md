@@ -1,243 +1,503 @@
 # A2UI Financial Assistant
 
-An AI-powered financial advisory assistant that uses a multi-agent architecture to generate dynamic A2UI JSON, which is rendered as interactive React components.
+An AI-powered financial advisory assistant built using a multi-agent architecture, FastAPI, React, and TypeScript. Instead of returning plain text, the assistant generates structured **A2UI JSON**, which is rendered dynamically into interactive React components.
 
-The project demonstrates how LLMs can decide the appropriate user interface based on user intent instead of returning plain text responses.
+The application demonstrates how Large Language Models can drive user interfaces through declarative UI generation while maintaining conversation context, validating outputs, handling streaming responses, and gracefully recovering from malformed responses.
 
 ---
 
-# 🚀 Tech Stack
+# Features
+
+- Multi-Agent Architecture
+- Real LLM Integration (Google Gemini)
+- Dynamic A2UI JSON Rendering
+- Recursive React Renderer
+- Conversation Memory
+- Streaming Responses using Server-Sent Events (SSE)
+- Validator + Retry Pipeline
+- Graceful Fallback UI
+- Controlled Form Components
+- Fully Typed Backend (Pydantic)
+- Fully Typed Frontend (TypeScript)
+
+---
+
+# Architecture
+
+```
+
+                    User
+
+                      │
+
+                      ▼
+
+             React + TypeScript
+
+                      │
+
+              Server Sent Events
+
+                      │
+
+                      ▼
+
+                FastAPI Backend
+
+                      │
+
+                      ▼
+
+          Financial Assistant Service
+
+                      │
+
+      ┌───────────────┼───────────────┐
+
+      ▼               ▼               ▼
+
+Intent Agent     Research Agent    UI Generator Agent
+
+      │                               │
+
+      └───────────────┬───────────────┘
+
+                      ▼
+
+             Validator Agent
+
+                      │
+
+          ┌───────────┴────────────┐
+
+          ▼                        ▼
+
+     Valid UI                 Retry Generation
+
+                                   │
+
+                              Retry Failed
+
+                                   │
+
+                                   ▼
+
+                             Fallback UI
+
+                                   │
+
+                                   ▼
+
+                           React Renderer
+
+```
+
+---
+
+# Tech Stack
 
 ## Backend
 
 - Python
 - FastAPI
-- OpenRouter
-- OpenAI Python SDK
 - Pydantic
+- Google Gemini API
+- Server Sent Events (SSE)
 
 ## Frontend
 
 - React
 - TypeScript
-- Tailwind CSS
+- CSS
+
+## AI
+
+- Google Gemini
+- Prompt Engineering
+- Multi-Agent Architecture
+- A2UI JSON Rendering
 
 ---
 
-# 🏗️ Architecture
+# Folder Structure
 
 ```
-User
-   │
-   ▼
-Intent Agent
-   │
-   ▼
-Research Agent
-   │
-   ▼
-UI Generator Agent
-   │
-   ▼
-A2UI JSON
-   │
-   ▼
-React Renderer
+
+backend/
+
+│
+
+├── agents/
+
+│ ├── intent_agent.py
+
+│ ├── research_agent.py
+
+│ ├── ui_generator_agent.py
+
+│ └── validator_agent.py
+
+│
+
+├── prompts/
+
+│
+
+├── services/
+
+│ ├── conversation_manager.py
+
+│ ├── financial_assistant_service.py
+
+│ └── llm_service.py
+
+│
+
+├── models/
+
+│
+
+└── utils/
+
+frontend/
+
+│
+
+├── components/
+
+├── api/
+
+├── styles/
+
+├── types/
+
+└── App.tsx
+
 ```
 
 ---
 
-# 🤖 Multi-Agent Pipeline
+# Multi-Agent Pipeline
 
-### Intent Agent
+The assistant follows a specialised multi-agent architecture where each agent has a single responsibility.
 
-Responsible for understanding the user's request.
+## 1. Intent Agent
+
+Responsible for identifying the user's intent.
 
 Example:
 
 ```
-Compare Apple and Microsoft
+
+Compare RELIANCE and TCS
+
 ```
 
 ↓
 
 ```
+
 COMPARE
+
+```
+
+or
+
+```
+
+Help me rebalance my portfolio
+
+```
+
+↓
+
+```
+
+ALLOCATE
+
 ```
 
 ---
 
-### Research Agent
+## 2. Research Agent
 
-Determines what information is required to answer the request.
+Based on the detected intent, this agent prepares a structured research plan for the UI generation agent.
+
+Instead of directly generating UI, it creates contextual information describing what should be presented.
+
+---
+
+## 3. UI Generator Agent
+
+Generates A2UI-compliant JSON using the research plan and conversation context.
+
+The output is parsed into structured JSON and rendered dynamically by the frontend.
+
+---
+
+## 4. Validator Agent
+
+Every generated UI is validated before reaching the frontend.
+
+Validation includes checking:
+
+- Supported component types
+- Parent-child hierarchy
+- Root container
+- Recursive component validation
+
+If validation fails:
+
+1. Retry UI generation once
+2. If retry fails, return a fallback UI
+
+---
+
+# Conversation Memory
+
+The application maintains conversation history using a dedicated `ConversationManager`.
+
+Every interaction stores:
+
+- User messages
+- Assistant responses
+
+This enables the assistant to understand follow-up questions and generate personalised interfaces across multiple turns.
 
 Example:
 
 ```
-Collect
 
-- Company Overview
-- Revenue
-- Market Capitalization
-- Net Profit
-- P/E Ratio
-- Earnings Growth
+User:
+
+Compare RELIANCE and TCS
+
+↓
+
+User:
+
+I want to invest ₹50,000
+
 ```
 
----
-
-### UI Generator Agent
-
-Uses the user query, detected intent, and research plan to generate structured A2UI JSON.
-
-Example Output:
-
-- Comparison Cards
-- Forms
-- Data Tables
-- Recommendation Cards
+The assistant can use previous conversation context while generating the recommendation.
 
 ---
 
-# 🎨 Supported A2UI Components
+# Streaming
+
+The backend streams progress updates using **Server-Sent Events (SSE)**.
+
+Pipeline:
+
+```
+
+Detecting Intent
+
+↓
+
+Planning Research
+
+↓
+
+Generating UI
+
+↓
+
+Validating UI
+
+↓
+
+Render Response
+
+```
+
+The frontend displays live progress updates while waiting for the final UI response, making the interaction feel responsive and AI-driven.
+
+---
+
+# Dynamic A2UI Renderer
+
+The frontend recursively renders UI components from AI-generated JSON.
+
+Supported components:
 
 - Container
 - Card
 - Text
 - Form
-- TextField
+- Text Field
 - Button
-- DataTable
 - Badge
+- Data Table
 - Chart
 
----
-
-# ✨ Features
-
-- Multi-Agent AI Pipeline
-- Real OpenRouter LLM Integration
-- Dynamic Intent Classification
-- Dynamic Research Planning
-- AI Generated A2UI JSON
-- Structured JSON Validation
-- Modular Agent Architecture
-- Clean Prompt Engineering
+Each component is independently reusable and supports nested composition.
 
 ---
 
-# 🚧 Current Status
+# Demo Flows
 
-## ✅ Completed
-
-- FastAPI Backend
-- OpenRouter Integration
-- Intent Agent
-- Research Agent
-- UI Generator Agent
-- Financial Assistant Service
-- Structured A2UI JSON Generation
-
-## 🚀 In Progress
-
-- React A2UI Renderer
-- Recursive Component Rendering
-- Conversation Memory
-- Streaming Responses
-
-## 📅 Planned
-
-- Validator + Retry Agent
-- Redis Conversation Memory
-- Tool Calling
-- Portfolio Recommendation Engine
-- Stock Data Integration
-
----
-
-# 📂 Project Structure
+## 1. Company Comparison
 
 ```
-backend/
-│
-├── app/
-│   ├── agents/
-│   │   ├── intent_agent.py
-│   │   ├── research_agent.py
-│   │   └── ui_generator_agent.py
-│   │
-│   ├── models/
-│   ├── services/
-│   ├── main.py
-│   └── ...
-│
-└── requirements.txt
-```
 
----
+Compare RELIANCE and TCS
 
-# 📌 Example Flow
-
-User:
-
-```
-Compare Apple and Microsoft
 ```
 
 ↓
 
-Intent Agent
-
-```
-COMPARE
-```
+Comparison Card
 
 ↓
 
-Research Agent
-
-```
-Company Overview
-Revenue
-Market Capitalization
-PE Ratio
-...
-```
-
-↓
-
-UI Generator
-
-```json
-{
-  "type": "container",
-  "children": [
-    {
-      "type": "card",
-      "title": "Apple vs Microsoft"
-    }
-  ]
-}
-```
-
-↓
-
-React renders the UI dynamically.
+Dynamic Data Table
 
 ---
 
-# 🎯 Project Goal
+## 2. Portfolio Rebalancing
 
-Instead of returning plain text, the AI generates structured A2UI JSON describing the interface. The frontend interprets this JSON and renders a fully interactive user experience.
+```
+
+Help me rebalance my portfolio
+
+```
+
+↓
+
+Dynamic Form
+
+↓
+
+Collect investment preferences
 
 ---
 
-# 📝 Future Improvements
+## 3. Investment Recommendation
 
-- Conversation Memory
-- Streaming Responses
-- Validator + Retry Loop
-- Tool Calling
-- Live Financial Data Integration
-- Model Fallback
-- Token Usage Tracking
+User submits:
+
+- Amount
+- Risk
+- Investment Horizon
+
+↓
+
+Recommendation Card
+
+↓
+
+Badge
+
+↓
+
+Allocation Summary
+
+↓
+
+Chart
+
+---
+
+# Running the Project
+
+## Backend
+
+```bash
+cd backend
+
+python -m venv .venv
+
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+uvicorn app.main:app --reload
+```
+
+## Frontend
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+---
+
+# Environment Variables
+
+Create a `.env` file.
+
+```env
+GEMINI_API_KEY=your_api_key
+MODEL_NAME=gemini-2.5-flash
+```
+
+---
+
+# Engineering Decisions
+
+- Chose a multi-agent architecture instead of a single prompt to separate responsibilities and improve maintainability.
+- Used conversation memory to support multi-turn interactions and personalised recommendations.
+- Implemented recursive validation to prevent malformed A2UI JSON from reaching the frontend.
+- Added a retry mechanism before falling back to a default UI for improved robustness.
+- Used recursive React rendering to support arbitrary nested UI structures generated by the LLM.
+- Implemented streaming with Server-Sent Events to improve perceived responsiveness.
+
+---
+
+# Challenges & Fixes
+
+## Challenge
+
+LLM occasionally returned malformed JSON.
+
+### Solution
+
+Added a validator with retry and fallback UI.
+
+---
+
+## Challenge
+
+Maintaining conversation context across multiple requests.
+
+### Solution
+
+Implemented a dedicated Conversation Manager that stores user and assistant messages.
+
+---
+
+## Challenge
+
+Rendering arbitrary nested UI structures.
+
+### Solution
+
+Built a recursive React renderer capable of rendering nested A2UI components.
+
+---
+
+# Future Improvements
+
+- Tool calling for real-time financial data
+- Token usage monitoring
+- Model fallback across multiple providers
+- Real chart rendering using Recharts
+- Persistent conversation storage using Redis or PostgreSQL
+- User authentication and saved conversations
+
+---
+
+# Screenshots
+
+Add screenshots demonstrating:
+
+- Company Comparison
+- Portfolio Form
+- Recommendation Card
+- Streaming Progress
