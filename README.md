@@ -101,7 +101,7 @@ Intent Agent     Research Agent    UI Generator Agent
 - Python
 - FastAPI
 - Pydantic
-- Google Gemini API
+- OPENROUTER
 - Server Sent Events (SSE)
 
 ## Frontend
@@ -119,60 +119,33 @@ Intent Agent     Research Agent    UI Generator Agent
 
 ---
 
-# Folder Structure
+## Folder Structure
 
-```
-
-backend/
-
+```text
+A2UI-Financial-Assistant/
 │
-
-├── agents/
-
-│ ├── intent_agent.py
-
-│ ├── research_agent.py
-
-│ ├── ui_generator_agent.py
-
-│ └── validator_agent.py
-
+├── backend/
+│   ├── app/
+│   │   ├── agents/
+│   │   ├── models/
+│   │   ├── prompts/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── .env.example
+│   └── requirements.txt
 │
-
-├── prompts/
-
+├── frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── styles/
+│   │   ├── types/
+│   │   └── App.tsx
+│   ├── package.json
+│   └── vite.config.ts
 │
-
-├── services/
-
-│ ├── conversation_manager.py
-
-│ ├── financial_assistant_service.py
-
-│ └── llm_service.py
-
-│
-
-├── models/
-
-│
-
-└── utils/
-
-frontend/
-
-│
-
-├── components/
-
-├── api/
-
-├── styles/
-
-├── types/
-
-└── App.tsx
-
+├── screenshots/
+└── README.md
 ```
 
 ---
