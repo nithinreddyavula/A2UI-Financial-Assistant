@@ -406,7 +406,7 @@ npm run dev
 Create a `.env` file.
 
 ```env
-GEMINI_API_KEY=your_api_key
+OPENROUTER_KEY=your_api_key
 MODEL_NAME=gemini-2.5-flash
 ```
 
